@@ -1,17 +1,18 @@
-use crate::light_shard;
-use crate::utility;
+use crate::collider::Collider;
+use crate::light_shard::LightShard;
+use crate::utility::Point;
 
 use macroquad::prelude::*;
 
 pub struct World {
-    darkness: u8,
-    light_shards: Vec<light_shard::LightShard>,
+    darkness: f32,
+    light_shards: Vec<LightShard>,
 }
 
 impl World {
     pub fn new() -> Self {
         let mut world = Self {
-            darkness: 50,
+            darkness: 20.0,
             light_shards: Vec::new(),
         };
 
@@ -22,12 +23,27 @@ impl World {
 
     fn generate_light_shards(&mut self) {
         // Generate light shards
-        let light_shard = light_shard::LightShard::new(utility::Point {
+        let light_shard = LightShard::new(Point {
             x: 100.0,
             y: screen_height() - 40.0,
         });
 
         self.light_shards.push(light_shard);
+    }
+
+    pub fn check_collisions(&mut self, player_collider: &Collider) {
+        for light_shard in &mut self.light_shards {
+            if light_shard.is_collected {
+                continue;
+            }
+
+            if player_collider.collides_with(&light_shard.collider) {
+                light_shard.is_collected = true;
+                self.darkness -= 5.0;
+
+                println!("Darkness diminished: {}", self.darkness);
+            }
+        }
     }
 
     pub fn render(&self) {

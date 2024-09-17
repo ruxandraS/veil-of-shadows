@@ -3,6 +3,7 @@ use macroquad_canvas::Canvas2D;
 use player::Player;
 use world::World;
 
+mod collider;
 mod light_shard;
 mod player;
 mod utility;
@@ -13,13 +14,15 @@ async fn main() {
     let canvas = Canvas2D::new(screen_width(), screen_height());
 
     let mut player = Player::new();
-    let world = World::new();
+    let mut world = World::new();
 
     loop {
+        player.update_position();
+        world.check_collisions(&player.collider);
+
         set_camera(&canvas.camera);
         clear_background(DARKGRAY);
 
-        player.update_position();
         player.render();
 
         world.render();
