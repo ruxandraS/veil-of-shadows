@@ -32,6 +32,13 @@ impl World {
         self.light_shards.push(light_shard);
     }
 
+    pub fn update(&mut self, delta: f32) {
+        // Update light shards
+        for light_shard in &mut self.light_shards {
+            light_shard.update(delta);
+        }
+    }
+
     pub fn check_collisions(&mut self, player_collider: &Collider) {
         for light_shard in &mut self.light_shards {
             if light_shard.is_collected {

@@ -4,6 +4,7 @@ pub struct Animation {
     pub current_frame: u8,
     pub frame_count: u8,
     pub flip: bool,
+    pub rotation: f32,
 }
 
 impl Animation {
@@ -14,6 +15,7 @@ impl Animation {
             current_frame: 0,
             frame_count,
             flip: false,
+            rotation: 0.0,
         }
     }
 
@@ -25,5 +27,9 @@ impl Animation {
     pub fn next_frame(&mut self) {
         self.current_frame = (self.current_frame + 1) % self.frame_count;
         self.time = 0.0;
+    }
+
+    pub fn rotate(&mut self) {
+        self.rotation = (self.rotation + std::f32::consts::PI / 4.0) % (2.0 * std::f32::consts::PI);
     }
 }

@@ -22,13 +22,13 @@ async fn main() {
         let delta = get_frame_time();
 
         player.update_position(delta, animation_fps);
+        world.update(delta);
         world.check_collisions(&player.collider);
 
         set_camera(&canvas.camera);
         clear_background(DARKGRAY);
 
         player.render();
-
         world.render();
 
         // Reset the camera

@@ -1,3 +1,4 @@
+use crate::animation::Animation;
 use crate::collider::Collider;
 use crate::utility::Point;
 use macroquad::prelude::*;
@@ -8,6 +9,7 @@ pub struct LightShard {
     pub is_collected: bool,
     pub collider: Collider,
     pub texture: Texture2D,
+    pub animation: Animation,
 }
 
 impl LightShard {
@@ -22,9 +24,27 @@ impl LightShard {
                 position,
                 size: Self::DEFAULT_SIZE,
             },
-            texture: load_texture("assets/textures/light-shard.png")
-                .await
-                .unwrap(),
+            texture: {
+                let texture = load_texture("assets/textures/light-shard.png")
+                    .await
+                    .unwrap();
+                texture.set_filter(FilterMode::Nearest);
+                texture
+            },
+            animation: Animation::new(16, 0),
+        }
+    }
+
+    pub fn update(&mut self, delta: f32) {
+        self.animation.time += delta;
+
+        if self.is_collected {
+            return;
+        }
+
+        if self.animation.time >= 0.5 {
+            self.animation.rotate();
+            self.animation.time = 0.0;
         }
     }
 
@@ -40,6 +60,7 @@ impl LightShard {
             WHITE,
             DrawTextureParams {
                 dest_size: Some(vec2(self.size, self.size)),
+                rotation: self.animation.rotation,
                 ..Default::default()
             },
         );
