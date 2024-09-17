@@ -10,23 +10,24 @@ pub struct World {
 }
 
 impl World {
-    pub fn new() -> Self {
+    pub async fn new() -> Self {
         let mut world = Self {
             darkness: 20.0,
             light_shards: Vec::new(),
         };
 
-        world.generate_light_shards();
+        world.generate_light_shards().await;
 
         world
     }
 
-    fn generate_light_shards(&mut self) {
+    async fn generate_light_shards(&mut self) {
         // Generate light shards
         let light_shard = LightShard::new(Point {
             x: 100.0,
             y: screen_height() - 40.0,
-        });
+        })
+        .await;
 
         self.light_shards.push(light_shard);
     }

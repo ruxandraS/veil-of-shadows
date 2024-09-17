@@ -7,12 +7,13 @@ pub struct LightShard {
     pub position: Point,
     pub is_collected: bool,
     pub collider: Collider,
+    pub texture: Texture2D,
 }
 
 impl LightShard {
-    const DEFAULT_SIZE: f32 = 10.0;
+    const DEFAULT_SIZE: f32 = 20.0;
 
-    pub fn new(position: Point) -> Self {
+    pub async fn new(position: Point) -> Self {
         Self {
             size: Self::DEFAULT_SIZE,
             position,
@@ -21,6 +22,9 @@ impl LightShard {
                 position,
                 size: Self::DEFAULT_SIZE,
             },
+            texture: load_texture("assets/textures/light-shard.png")
+                .await
+                .unwrap(),
         }
     }
 
@@ -29,6 +33,15 @@ impl LightShard {
             return;
         }
 
-        draw_circle(self.position.x, self.position.y, self.size.into(), YELLOW);
+        draw_texture_ex(
+            &self.texture,
+            self.position.x - self.size / 2.0,
+            self.position.y - self.size / 2.0,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(vec2(self.size, self.size)),
+                ..Default::default()
+            },
+        );
     }
 }

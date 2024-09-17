@@ -14,7 +14,7 @@ async fn main() {
     let canvas = Canvas2D::new(screen_width(), screen_height());
 
     let mut player = Player::new();
-    let mut world = World::new();
+    let mut world = World::new().await;
 
     loop {
         player.update_position();
