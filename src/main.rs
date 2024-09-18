@@ -6,13 +6,13 @@ use world::World;
 mod animation;
 mod collider;
 mod light_shard;
+mod platform;
 mod player;
 mod utility;
 mod world;
 
 #[macroquad::main("Veil of Shadows")]
 async fn main() {
-    let animation_fps = 24.0;
     let canvas = Canvas2D::new(screen_width(), screen_height());
 
     let mut player = Player::new().await;
@@ -21,7 +21,7 @@ async fn main() {
     loop {
         let delta = get_frame_time();
 
-        player.update_position(delta, animation_fps);
+        player.update_position(delta);
         world.update(delta);
         world.check_collisions(&player.collider);
 

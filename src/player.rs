@@ -1,8 +1,6 @@
 use std::collections::HashMap;
 
-use crate::animation::Animation;
-use crate::collider::Collider;
-use crate::utility::Point;
+use crate::{animation::Animation, collider::Collider, utility::Point};
 
 use macroquad::prelude::*;
 
@@ -52,17 +50,14 @@ impl Player {
         Self {
             size: Self::DEFAULT_SIZE,
             position,
-            collider: Collider {
-                position,
-                size: Self::DEFAULT_SIZE,
-            },
+            collider: Collider::square(position, Self::DEFAULT_SIZE),
             state: State::Idle,
             texture_map,
-            animation: Animation::new(16, 6),
+            animation: Animation::new(16, 6, 1.0 / 24.0),
         }
     }
 
-    pub fn update_position(&mut self, delta: f32, animation_fps: f32) {
+    pub fn update_position(&mut self, delta: f32) {
         let previous_state = self.state;
         self.animation.time += delta;
 
@@ -84,7 +79,7 @@ impl Player {
 
         if self.state != previous_state {
             self.animation.reset_frame();
-        } else if self.animation.time >= 1.0 / animation_fps {
+        } else if self.animation.time >= self.animation.speed {
             self.animation.next_frame();
         }
     }
